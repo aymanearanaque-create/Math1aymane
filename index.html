@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Aymane | Apprendre Intelligemment</title>
+    <style>
+        /* --- STYLE CSS --- */
+        :root {
+            --blue-math: #1a4a7c;
+            --blue-light: #eef4fb;
+            --green-success: #27ae60;
+            --red-error: #e74c3c;
+            --accent: #3498db;
+            --white: #ffffff;
+            --gray: #ecf0f1;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { margin: 0; background-color: var(--blue-light); color: #2c3e50; }
+
+        /* Navigation */
+        nav { background: var(--blue-math); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .logo { font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; }
+        .nav-links li { cursor: pointer; transition: 0.3s; }
+        .nav-links li:hover { color: var(--accent); }
+
+        /* Structure Pages */
+        .page { display: none; padding: 40px 5%; max-width: 1200px; margin: auto; animation: fadeIn 0.4s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Accueil */
+        .hero { text-align: center; padding: 60px 20px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .hero h1 { color: var(--blue-math); font-size: 2.8rem; margin-bottom: 10px; }
+        .grid-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+        .card { background: white; padding: 25px; border-radius: 15px; border-bottom: 5px solid var(--blue-math); cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+        /* Exercices & Clavier */
+        .exercise-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 20px; text-align: center; }
+        .stats-bar { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; color: var(--blue-math); }
+        .progress-bg { background: var(--gray); height: 12px; border-radius: 6px; margin-bottom: 25px; overflow: hidden; }
+        #progress-fill { background: var(--green-success); height: 100%; width: 0%; transition: 0.5s; }
+        
+        .math-display { font-size: 1.8rem; margin: 30px 0; min-height: 50px; font-weight: bold; }
+        .answer-zone { width: 100%; padding: 15px; font-size: 1.5rem; border: 2px solid var(--gray); border-radius: 10px; margin-bottom: 20px; text-align: center; outline: none; }
+        .answer-zone:focus { border-color: var(--accent); }
+
+        /* Clavier Mathématique */
+        .math-keyboard { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; background: #d1d8e0; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        .key { background: white; border: none; padding: 12px 5px; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.2s; }
+        .key:hover { background: var(--accent); color: white; }
+        .key.special { background: #4b6584; color: white; }
+        .key.action { background: var(--blue-math); color: white; grid-column: span 2; }
+        .quick-btns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 10px; }
+
+        /* QCM */
+        .qcm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .qcm-opt { padding: 15px; background: var(--gray); border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .qcm-opt:hover { background: var(--accent); color: white; }
+
+        .btn-main { background: var(--blue-math); color: white; padding: 15px 30px; border: none; border-radius: 10px; font-size: 1.1rem; cursor: pointer; margin: 10px; }
+        .feedback { margin: 20px 0; font-weight: bold; font-size: 1.2rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) { .math-keyboard { grid-template-columns: repeat(5, 1fr); } .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="showPage('home')">📐 MATH AYMANE</div>
+        <ul class="nav-links">
+            <li onclick="showPage('home')">Accueil</li>
+            <li onclick="showPage('cours-list')">Cours</li>
+            <li onclick="showPage('progression-page')">Progression</li>
+            <li onclick="showPage('about')">À propos</li>
+        </ul>
+        <div id="top-score">Score: 0</div>
+    </nav>
+
+    <section id="home" class="page active">
+        <div class="hero">
+            <h1>Math Aymane</h1>
+            <p>Apprendre les mathématiques intelligemment avec une méthode interactive.</p>
+            <p style="font-style: italic; color: #7f8c8d;">"L'essence des mathématiques n'est pas de rendre les choses simples compliquées, mais de rendre les choses compliquées simples."</p>
+            <button class="btn-main" onclick="showPage('cours-list')">Commencer l'aventure</button>
+        </div>
+        <div class="grid-chapters" id="home-grid"></div>
+    </section>
+
+    <section id="cours-list" class="page">
+        <h2>Choisissez un chapitre</h2>
+        <div class="grid-chapters" id="full-list-grid"></div>
+    </section>
+
+    <section id="cours-detail" class="page">
+        <button onclick="showPage('cours-list')" class="btn-main" style="background: #95a5a6;">← Retour</button>
+        <div id="cours-body" class="hero" style="text-align: left; margin-top: 20px;"></div>
+        <center><button class="btn-main" id="start-ex-btn">Passer aux exercices →</button></center>
+    </section>
+
+    <section id="exercise-page" class="page">
+        <div class="exercise-container">
+            <div class="stats-bar">
+                <span id="ex-title">Chapitre</span>
+                <span>Points: <span id="current-pts">0</span></span>
+            </div>
+            <div class="progress-bg"><div id="progress-fill"></div></div>
+            
+            <div id="question-box">
+                <div class="math-display" id="math-q">Chargement...</div>
+                
+                <input type="text" id="math-input" class="answer-zone" readonly>
+
+                <div class="math-keyboard" id="keyboard">
+                    </div>
+                
+                <div class="quick-btns" id="quick-btns"></div>
+
+                <div id="qcm-box" class="qcm-grid" style="display:none"></div>
+
+                <div class="feedback" id="feedback"></div>
+                
+                <div id="action-btns">
+                    <button class="btn-main" onclick="checkAnswer()">Vérifier</button>
+                    <button class="btn-main" style="background:#e67e22" onclick="showSolution()">Voir la réponse</button>
+                </div>
+                <button class="btn-main" id="next-btn" style="display:none; background: var(--green-success)" onclick="nextQuestion()">Question Suivante</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="progression-page" class="page">
+        <h2>Votre Progression</h2>
+        <div class="hero">
+            <h1 id="total-score-big">0</h1>
+            <p>Points Totaux</p>
+            <div id="rank-display" style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">Niveau : Apprenti</div>
+        </div>
+    </section>
+
+    <section id="about" class="page">
+        <div class="hero">
+            <h2>À propos</h2>
+            <p>Math Aymane est une plateforme éducative conçue pour les élèves souhaitant maîtriser les concepts fondamentaux du collège et lycée.</p>
+        </div>
+    </section>
+
+    <script>
+        /* --- LOGIQUE JAVASCRIPT --- */
+
+        const db = [
+            {
+                title: "Développement algébrique",
+                def: "Développer un produit signifie l'écrire sous forme d'une somme ou d'une différence.",
+                formula: "(a+b)(c+d) = ac + ad + bc + bd",
+                method: "1. Multiplier chaque terme. 2. Respecter la règle des signes. 3. Réduire l'expression.",
+                questions: [
+                    { q: "(x+3)(x+5)", a: "x²+8x+15", type: "text" },
+                    { q: "(2x+1)(x-4)", a: "2x²-7x-4", type: "text" },
+                    { q: "(x+2)²", a: "x²+4x+4", type: "text" },
+                    { q: "(x-3)²", a: "x²-6x+9", type: "text" },
+                    { q: "(3x+1)(2x+5)", a: "6x²+17x+5", type: "text" },
+                    { q: "(x+4)(x-4)", a: "x²-16", type: "text" },
+                    { q: "(2x+3)(x+7)", a: "2x²+17x+21", type: "text", diff: "hard" },
+                    { q: "Forme développée de (a+b)² ?", options: ["a²+b²", "a²+2ab+b²", "a²-2ab+b²", "2a+2b"], a: "a²+2ab+b²", type: "qcm" }
+                ]
+            },
+            {
+                title: "Factorisation",
+                def: "Factoriser signifie transformer une somme en produit.",
+                formula: "ka + kb = k(a+b) | a²-b² = (a-b)(a+b)",
+                method: "Trouver un facteur commun ou utiliser une identité remarquable.",
+                questions: [
+                    { q: "x² + 5x", a: "x(x+5)", type: "text" },
+                    { q: "x² - 9", a: "(x-3)(x+3)", type: "text" },
+                    { q: "2x² + 6x", a: "2x(x+3)", type: "text" },
+                    { q: "x² + 6x + 9", a: "(x+3)²", type: "text" },
+                    { q: "3x² - 12", a: "3(x-2)(x+2)", type: "text" },
+                    { q: "x² + 7x + 10", a: "(x+2)(x+5)", type: "text", diff: "hard" }
+                ]
+            },
+            {
+                title: "Équations du 1er degré",
+                def: "Une égalité comportant une inconnue x.",
+                formula: "ax + b = 0 => x = -b/a",
+                method: "Isoler x en déplaçant les termes (changer le signe en traversant l'égal).",
+                questions: [
+                    { q: "3x + 5 = 20", a: "5", type: "text" },
+                    { q: "2x - 7 = 9", a: "8", type: "text" },
+                    { q: "5x + 8 = 3x + 12", a: "2", type: "text" },
+                    { q: "7x - 3 = 4x + 18", a: "7", type: "text" }
+                ]
+            },
+            {
+                title: "Théorème de Pythagore",
+                def: "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des autres côtés.",
+                formula: "BC² = AB² + AC²",
+                method: "1. Vérifier que le triangle est rectangle. 2. Écrire l'égalité. 3. Calculer la racine carrée.",
+                questions: [
+                    { q: "Triangle rect. de côtés 3 et 4. Hypoténuse ?", a: "5", type: "text" },
+                    { q: "Triangle rect. de côtés 5 et 12. Hypoténuse ?", a: "13", type: "text" },
+                    { q: "Triangle rect. de côtés 8 et 15. Hypoténuse ?", a: "17", type: "text", diff: "hard" }
+                ]
+            }
+        ];
+
+        let score = 0;
+        let currentChapterIdx = 0;
+        let currentQuestIdx = 0;
+
+        // --- Navigation ---
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // --- Init Clavier ---
+        const keys = ['x²', 'x³', 'xⁿ', '√', '∛', '/', '(', ')', '[', ']', '{', '}', '|x|', 'π', '±', '≠', '≤', '≥', '=', '+', '-', '×', '÷', '^', 'x', 'y', 'z', 'a', 'b', 'c', 'Δ', '∑'];
+        const quickActions = [
+            { label: "x²+bx+c=0", val: "x²+bx+c=0" },
+            { label: "(a+b)²", val: "(a+b)²" },
+            { label: "a²+b²=c²", val: "a²+b²=c²" },
+            { label: "vec AB", val: "vec(AB)" }
+        ];
+
+        function initKeyboard() {
+            const kb = document.getElementById('keyboard');
+            keys.forEach(k => {
+                const b = document.createElement('button');
+                b.className = 'key';
+                b.innerText = k;
+                b.onclick = () => insertMath(k);
+                kb.appendChild(b);
+            });
+            
+            // Touches spéciales
+            const actions = [
+                { l: "Espace", c: "action", f: () => insertMath(' ') },
+                { l: "Effacer", c: "action", f: () => document.getElementById('math-input').value = "" },
+                { l: "⌫", c: "special", f: () => {
+                    let v = document.getElementById('math-input').value;
+                    document.getElementById('math-input').value = v.slice(0, -1);
+                }}
+            ];
+            actions.forEach(a => {
+                const b = document.createElement('button');
+                b.className = `key ${a.c}`;
+                b.innerText = a.l;
+                b.onclick = a.f;
+                kb.appendChild(b);
+            });
+
+            const qb = document.getElementById('quick-btns');
+            quickActions.forEach(a => {
+                const b = document.createElement('button');
+                b.className = 'key';
+                b.innerText = a.label;
+                b.onclick = () => insertMath(a.val);
+                qb.appendChild(b);
+            });
+        }
+
+        function insertMath(val) {
+            const input = document.getElementById('math-input');
+            input.value += val;
+        }
+
+        // --- Système de jeu ---
+        function initApp() {
+            const hg = document.getElementById('home-grid');
+            const fl = document.getElementById('full-list-grid');
+            db.forEach((ch, idx) => {
+                const card = `<div class="card" onclick="openCours(${idx})"><h3>${ch.title}</h3><p>${ch.def.slice(0, 40)}...</p></div>`;
+                hg.innerHTML += card;
+                fl.innerHTML += card;
+            });
+            initKeyboard();
+        }
+
+        function openCours(idx) {
+            currentChapterIdx = idx;
+            const ch = db[idx];
+            document.getElementById('cours-body').innerHTML = `
+                <h2>${ch.title}</h2>
+                <p><strong>Définition:</strong> ${ch.def}</p>
+                <div class="card" style="background:#f9f9f9; border-left: 5px solid var(--accent)"><strong>Formule:</strong> ${ch.formula}</div>
+                <p><strong>Méthode:</strong> ${ch.method}</p>
+                <p style="color:var(--green-success)"><strong>Astuce:</strong> Ne pas oublier les parenthèses lors des calculs.</p>
+            `;
+            document.getElementById('start-ex-btn').onclick = () => startChapter(idx);
+            showPage('cours-detail');
+        }
+
+        function startChapter(idx) {
+            currentChapterIdx = idx;
+            currentQuestIdx = 0;
+            updateExDisplay();
+            showPage('exercise-page');
+        }
+
+        function updateExDisplay() {
+            const ch = db[currentChapterIdx];
+            const q = ch.questions[currentQuestIdx];
+            document.getElementById('ex-title').innerText = ch.title;
+            document.getElementById('math-q').innerText = q.q;
+            document.getElementById('feedback').innerText = "";
+            document.getElementById('next-btn').style.display = "none";
+            document.getElementById('action-btns').style.display = "block";
+            document.getElementById('progress-fill').style.width = ((currentQuestIdx / ch.questions.length) * 100) + "%";
+            
+            if(q.type === "qcm") {
+                document.getElementById('qcm-box').style.display = "grid";
+                document.getElementById('keyboard').style.display = "none";
+                document.getElementById('math-input').style.display = "none";
+                const box = document.getElementById('qcm-box');
+                box.innerHTML = "";
+                q.options.forEach(opt => {
+                    const d = document.createElement('div');
+                    d.className = "qcm-opt";
+                    d.innerText = opt;
+                    d.onclick = () => checkQcm(opt);
+                    box.appendChild(d);
+                });
+            } else {
+                document.getElementById('qcm-box').style.display = "none";
+                document.getElementById('keyboard').style.display = "grid";
+                document.getElementById('math-input').style.display = "block";
+                document.getElementById('math-input').value = "";
+                document.getElementById('math-input').disabled = false;
+            }
+        }
+
+        function checkAnswer() {
+            const ans = document.getElementById('math-input').value.replace(/\s/g, '');
+            const correct = db[currentChapterIdx].questions[currentQuestIdx].a.replace(/\s/g, '');
+            const f = document.getElementById('feedback');
+
+            if(ans === correct) {
+                success();
+            } else {
+                f.innerText = "Incorrect, réessaie.";
+                f.style.color = "var(--red-error)";
+            }
+        }
+
+        function checkQcm(opt) {
+            if(opt === db[currentChapterIdx].questions[currentQuestIdx].a) {
+                success();
+            } else {
+                const f = document.getElementById('feedback');
+                f.innerText = "Faux.";
+                f.style.color = "var(--red-error)";
+            }
+        }
+
+        function success() {
+            const f = document.getElementById('feedback');
+            f.innerText = "Correct ! Niveau suivant.";
+            f.style.color = "var(--green-success)";
+            score += 10;
+            updateGlobalStats();
+            document.getElementById('action-btns').style.display = "none";
+            document.getElementById('next-btn').style.display = "inline-block";
+        }
+
+        function showSolution() {
+            const f = document.getElementById('feedback');
+            f.innerText = "Réponse affichée : " + db[currentChapterIdx].questions[currentQuestIdx].a + " — aucun point gagné.";
+            f.style.color = "#e67e22";
+            document.getElementById('action-btns').style.display = "none";
+            document.getElementById('next-btn').style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentQuestIdx++;
+            if(currentQuestIdx < db[currentChapterIdx].questions.length) {
+                updateExDisplay();
+            } else {
+                alert("Chapitre terminé ! Félicitations.");
+                showPage('home');
+            }
+        }
+
+        function updateGlobalStats() {
+            document.getElementById('current-pts').innerText = score;
+            document.getElementById('top-score').innerText = "Score: " + score;
+            document.getElementById('total-score-big').innerText = score;
+            let rank = "Apprenti";
+            if(score > 100) rank = "Initié";
+            if(score > 300) rank = "Expert";
+            document.getElementById('rank-display').innerText = "Niveau : " + rank;
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
